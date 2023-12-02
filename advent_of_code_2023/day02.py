@@ -3,7 +3,7 @@ from pathlib import Path
 INPUT_FN = Path(__file__).parent.parent / "input/day02.txt"
 
 
-def parse(fn: Path) -> list[list[tuple[int, str]]]:
+def parse(fn: Path) -> list[str]:
     with open(fn) as f:
         out = []
         for line in f.readlines():
@@ -22,7 +22,7 @@ def min_count(line: str) -> dict[str, int]:
 color_lim = {"red": 12, "green": 13, "blue": 14}
 
 
-def solve(input: list[list[tuple[int, str]]]) -> tuple[int, int]:
+def solve(input: list[str]) -> tuple[int, int]:
     ans1 = 0
     for i, line in enumerate(input):
         colors = min_count(line)
