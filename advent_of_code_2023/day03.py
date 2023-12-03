@@ -3,6 +3,7 @@ from pathlib import Path
 INPUT_FN = Path(__file__).parent.parent / "input/day03.txt"
 deltas = [(1, 1), (1, 0), (1, -1), (0, -1), (0, 1), (-1, -1), (-1, 0), (-1, 1)]
 
+
 def parse(fn: Path) -> list[tuple[int, bool, list]]:
     with open(fn) as f:
         raw_lines = [x.strip() for x in f.readlines()]
@@ -30,7 +31,6 @@ def parse(fn: Path) -> list[tuple[int, bool, list]]:
 
 def solve(input: list[tuple[int, bool, list]]) -> tuple[int, int]:
     ans1 = sum(num for num, has_neighbors, _ in input if has_neighbors)
-
 
     gears = {}
     for num, _, gear in filter(lambda x: len(x[2]) > 0, input):

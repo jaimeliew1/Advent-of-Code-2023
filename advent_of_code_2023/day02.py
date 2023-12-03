@@ -17,6 +17,8 @@ def min_count(line: str) -> dict[str, int]:
 
 
 color_lim = {"red": 12, "green": 13, "blue": 14}
+
+
 def solve(input: list[str]) -> tuple[int, int]:
     ans1 = 0
     for i, line in enumerate(input):
