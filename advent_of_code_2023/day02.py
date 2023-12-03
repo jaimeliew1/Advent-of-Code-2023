@@ -5,10 +5,7 @@ INPUT_FN = Path(__file__).parent.parent / "input/day02.txt"
 
 def parse(fn: Path) -> list[str]:
     with open(fn) as f:
-        out = []
-        for line in f.readlines():
-            out.append(line.rsplit(":")[1])
-    return out
+        return [line.rsplit(":")[1] for line in f.readlines()]
 
 
 def min_count(line: str) -> dict[str, int]:
@@ -20,8 +17,6 @@ def min_count(line: str) -> dict[str, int]:
 
 
 color_lim = {"red": 12, "green": 13, "blue": 14}
-
-
 def solve(input: list[str]) -> tuple[int, int]:
     ans1 = 0
     for i, line in enumerate(input):
@@ -29,13 +24,7 @@ def solve(input: list[str]) -> tuple[int, int]:
         if all(colors[c] <= color_lim[c] for c in ("red", "green", "blue")):
             ans1 += i + 1
 
-    ans2 = sum(
-        map(
-            lambda c: c["red"] * c["green"] * c["blue"],
-            (min_count(line) for line in input),
-        )
-    )
-
+    ans2 = sum(c["red"] * c["green"] * c["blue"] for c in (min_count(line) for line in input))
     return ans1, ans2
 
 
