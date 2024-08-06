@@ -17,7 +17,7 @@ def extrapolate(line: list) -> int:
     N = len(diffs)
     for i in range(1, N):
         diffs[N - i - 1].append(diffs[N - i - 1][-1] + diffs[N - i][-1])
-    return diffs[0][-1]
+    return int(diffs[0][-1])
 
 
 def solve(input: list[list[int]]) -> tuple[int, int]:
