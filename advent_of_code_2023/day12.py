@@ -1,37 +1,46 @@
+from functools import cache
 from pathlib import Path
-from itertools import product
 
 INPUT_FN = Path(__file__).parent.parent / "input/day12.txt"
 
 
-def parse(fn: Path) -> list[list[str]]:
-    return [line.strip().split(" ") for line in open(fn).readlines()]
+def parse(fn: Path) -> list[tuple[str, tuple[int]]]:
+    with open(fn) as f:
+        return [
+            (record, tuple(map(int, lengths.split(","))))
+            for record, lengths in (line.strip().split() for line in f)
+        ]
 
 
-def arrangement_gen(record: str):
-    all_strings = list(product(["#", "."], repeat=record.count("?")))
-    indices = [i for i, v in enumerate(record) if v == "?"]
-    for arrangement in all_strings:
-        out = list(record)
-        for i, v in zip(indices, arrangement):
-            out[i] = v
+@cache
+def valid_arrangements(record: str, counts: tuple[int]) -> int:
+    record = record.lstrip(".") # left .'s are redundant.
 
-        yield "".join(out)
+    if len(record) == 0: # empty record is valid of no more counts.
+        return int(len(counts) == 0)
+    elif len(counts) == 0: # empty count is valid of no more springs.
+        return int("#" not in record)
+    elif record[0] == "#":
+        if len(record) < counts[0] or "." in record[: counts[0]]:
+            return 0 # invalid record not long enough or short spring length.
+        elif len(record) == counts[0]:
+            return int(len(counts) == 1) # valid if record length matches final count.
+        elif record[counts[0]] == "#":
+            return 0 # invalid of spring is too long.
+        else:
+            return valid_arrangements(record[counts[0] + 1 :], counts[1:]) # check remaining record.
+    elif record[0] == "?":
+        return valid_arrangements("." + record[1:], counts) + valid_arrangements(
+            "#" + record[1:], counts
+        ) # fork if ? is next in record.
 
 
-def count_lengths(record: str) -> list[int]:
-    return list(len(x) for x in record.split(".") if len(x) > 0)
-
-
-def solve(input: list[list[str]]) -> tuple[int, int]:
-    ans1 = 0
-    for record in input:
-        lengths = [int(x) for x in record[1].split(",")]
-        counts = sum(1 for a in arrangement_gen(record[0]) if count_lengths(a) == lengths)
-
-        ans1 += counts
-
-    return ans1, 0
+def solve(input: list[tuple[str, tuple[int]]]) -> tuple[int, int]:
+    ans1 = sum([valid_arrangements(record, lengths) for record, lengths in input])
+    ans2 = sum(
+        [valid_arrangements("?".join([r for _ in range(5)]), 5 * l) for r, l in input]
+    )
+    return ans1, ans2
 
 
 if __name__ == "__main__":
