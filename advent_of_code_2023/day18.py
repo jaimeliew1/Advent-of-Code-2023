@@ -1,5 +1,4 @@
 from pathlib import Path
-from rich import print
 
 INPUT_FN = Path(__file__).parent.parent / "input/day18.txt"
 
